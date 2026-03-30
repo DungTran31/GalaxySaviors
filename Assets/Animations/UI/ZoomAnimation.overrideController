@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ZoomAnimation
+  m_Controller: {fileID: 9100000, guid: 892db117cb1eb8c40a1d72f8ec2f98c7, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 1f319305a50af77469561b3d3e0a7b1b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7842b2070e4149b40bf28569e3f6a980, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c7fa5ac2f039dbd43959eb0677e0e561, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ef8af3017d85e6848bbe8ec305d6236b, type: 2}

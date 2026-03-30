@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733ccda2f7a4cf5439fc4fdf1e32115c, type: 3}
+  m_Name: high
+  m_EditorClassIdentifier: 
+  id: high
+  dialogueTypingSoundClips:
+  - {fileID: 8300000, guid: 0594ec8ad01d84b4fa0db46b5107d270, type: 3}
+  - {fileID: 8300000, guid: 0d3574c70eae7ea409e92ce6f5ca1863, type: 3}
+  - {fileID: 8300000, guid: 6011670900523154f9c7fc548be769fd, type: 3}
+  - {fileID: 8300000, guid: 4d147d16254fcfc42af1f4cd8073ebce, type: 3}
+  - {fileID: 8300000, guid: eda3c9c60c0b2d9499ac9e83a7931a1b, type: 3}
+  - {fileID: 8300000, guid: 24afe868ba7c31541b67b37c9a2c9278, type: 3}
+  - {fileID: 8300000, guid: f6e62f1bc60966e49a92fd94cb417965, type: 3}
+  - {fileID: 8300000, guid: d3379023d3588a243a09add6f3efb402, type: 3}
+  - {fileID: 8300000, guid: 36eb50ba6db9f7543950196a8dcde61b, type: 3}
+  - {fileID: 8300000, guid: 38963118e54dcfa47815f4d0e0d6fc1e, type: 3}
+  - {fileID: 8300000, guid: 9d1739d878a50ec4eafc0dc182cbecac, type: 3}
+  - {fileID: 8300000, guid: 2acfd69cec8db53419d4dadd9b50ca9c, type: 3}
+  - {fileID: 8300000, guid: 013e6a9d93558294b8cbb6e2f982bb11, type: 3}
+  - {fileID: 8300000, guid: 74b2446147036b64298e9c4fc81ee31d, type: 3}
+  - {fileID: 8300000, guid: c8d8410b07c8bce4b868417be4946475, type: 3}
+  - {fileID: 8300000, guid: e77aff2da1c0f2b46af3a8de9f47dea0, type: 3}
+  - {fileID: 8300000, guid: bfcc2588692ff12409aab4b69979fdcb, type: 3}
+  - {fileID: 8300000, guid: 1f7fcf04f1b8dbc46afe7f6f6c957006, type: 3}
+  - {fileID: 8300000, guid: 801b22b417d3dc14d8ccad0201b5a82a, type: 3}
+  - {fileID: 8300000, guid: 6b3ab17f8300b50468e8bf4bf1fe99b2, type: 3}
+  - {fileID: 8300000, guid: 80f3922c9b0ca6941a8bb08119f35262, type: 3}
+  - {fileID: 8300000, guid: 8a3cf2fde4766a645b0b59a7f8675336, type: 3}
+  - {fileID: 8300000, guid: 897c318dd399d4f4fb750b2414c39b63, type: 3}
+  - {fileID: 8300000, guid: 160e5906f5166594bb666226d6cf2bed, type: 3}
+  frequencyLevel: 2
+  minPitch: 0.5
+  maxPitch: 3
+  stopAudioSource: 0

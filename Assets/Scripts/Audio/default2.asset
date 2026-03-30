@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733ccda2f7a4cf5439fc4fdf1e32115c, type: 3}
+  m_Name: default2
+  m_EditorClassIdentifier: 
+  id: default
+  dialogueTypingSoundClips:
+  - {fileID: 8300000, guid: f64f04ebec08b704da15893e31923af9, type: 3}
+  - {fileID: 8300000, guid: 1b5534cc9ae463d4eb6cc986a7d3b169, type: 3}
+  - {fileID: 8300000, guid: 13afa7f713cbc1b479a02cb7e7d1a207, type: 3}
+  - {fileID: 8300000, guid: ad1bd19c6e2382f4881364b7e49e8b73, type: 3}
+  - {fileID: 8300000, guid: ba16e323b1db3cc4aa9c20505237d471, type: 3}
+  - {fileID: 8300000, guid: 165995f682ec4e344bc85649be8e6d62, type: 3}
+  - {fileID: 8300000, guid: 61553e4f228c7ea4d9f4376e1e84caaf, type: 3}
+  - {fileID: 8300000, guid: 6a2762a958a842942b0f5f52e48f7a74, type: 3}
+  frequencyLevel: 2
+  minPitch: 0.5
+  maxPitch: 3
+  stopAudioSource: 0
