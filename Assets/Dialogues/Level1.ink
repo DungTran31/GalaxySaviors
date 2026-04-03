@@ -2,6 +2,8 @@ INCLUDE globals.ink
 
 { player_nickname == "": -> boss_defeat | -> already_chose }
 
+-> boss_defeat
+
 === boss_defeat ===
 The mighty foe lies defeated at your feet. The residents gather around, their faces filled with gratitude and awe. One of the elders steps forward. #speaker:Narrator #layout:left #audio:1_3_raw
 "Your bravery has saved us all. From now on, you shall be known by a name fitting of your heroism. What shall we call you?"

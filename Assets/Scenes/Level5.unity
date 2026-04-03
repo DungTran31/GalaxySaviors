@@ -556,7 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e25173a6445cd647a94bd66bcc2e303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSON: {fileID: 4900000, guid: 4077a6a28c3a47c4d820e5d9f32659be, type: 3}
+  inkJSON: {fileID: 4900000, guid: 8aaeebad4e1062148aec0c756fb0f9c1, type: 3}
 --- !u!1 &242997870
 GameObject:
   m_ObjectHideFlags: 3
@@ -3941,7 +3941,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e3942466dec066746b55e8b31d7c40fc, type: 2}
+  - {fileID: 2100000, guid: a17252cf8f6fef543b62f6d2a97d5b41, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

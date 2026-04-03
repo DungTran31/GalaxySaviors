@@ -474,7 +474,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1094980971}
-  - component: {fileID: 1094980970}
   - component: {fileID: 1094980972}
   m_Layer: 0
   m_Name: Player
@@ -483,22 +482,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1094980970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094980969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10287ee95d7bcca4e824bd4c25875c74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  head: {fileID: 1637524653}
-  sprite1: {fileID: 21300000, guid: 7e21bd716a674db45899deaeda9bed0d, type: 3}
-  sprite2: {fileID: 21300000, guid: 3ee9fbbd6dd7ba744977b781a06f386a, type: 3}
-  sprite3: {fileID: 21300000, guid: 91d75833dd7956d41b9ef3a4cbab263f, type: 3}
 --- !u!4 &1094980971
 Transform:
   m_ObjectHideFlags: 0
@@ -527,7 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa0bf4a2b53a1ba40b9203c52be42c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSON: {fileID: 4900000, guid: 32bbcf6194a57d34fb84846e9040c12f, type: 3}
+  inkJSON: {fileID: 4900000, guid: 27b8530e941e8af40bb3325ccd721801, type: 3}
 --- !u!1 &1287129188 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4196550807675736016, guid: df4f3c3bf9a4959439e48ccfeeb0c966, type: 3}
@@ -833,7 +816,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 7e21bd716a674db45899deaeda9bed0d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 91d75833dd7956d41b9ef3a4cbab263f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
