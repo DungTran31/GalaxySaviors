@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace DungTran31
+namespace DungTran31.UI
 {
     public class LevelBox : MonoBehaviour
     {
