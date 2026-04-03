@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DungTran31.GamePlay.Player;
 
 namespace DungTran31.UI
 {
@@ -7,110 +8,81 @@ namespace DungTran31.UI
         [Header("Scroll")]
         [SerializeField] private float scrollSpeed = 0.5f;
 
-        [Header("Movement")]
-        [SerializeField] private float moveSpeed = 5f;
+        [Header("Renderer (optional)")]
+        [SerializeField] private Renderer targetRenderer;
 
-        [Header("Bounds")]
-        [SerializeField] private float minY = -3f;
-        [SerializeField] private float maxY = 3f;
+        [Header("Follow Player")]
+        [SerializeField] private Transform player;
+        [SerializeField] private bool followX = false;
+        [SerializeField] private bool followY = true;
+        [SerializeField] private bool followZ = false;
+        [SerializeField] private Vector3 followOffset = Vector3.zero;
+        [SerializeField, Tooltip("How quickly the background moves to the player's position. Higher = snappier.")]
+        private float followSmooth = 15f;
 
-        private SpriteRenderer _spriteRenderer;
         private Material _material;
         private Vector2 _offset;
 
-        private static readonly int MainTex = Shader.PropertyToID("_MainTex");
-
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (targetRenderer == null)
+                targetRenderer = GetComponent<Renderer>();
 
-            // Tạo instance material (tránh ảnh hưởng object khác)
-            _material = _spriteRenderer.material;
+            if (targetRenderer != null)
+                _material = targetRenderer.material; // creates an instance for this renderer
 
-            // Lấy offset hiện tại
-            _offset = _material.GetTextureOffset(MainTex);
+            // Auto-find player if not assigned (requires PlayerController in scene)
+            if (player == null)
+            {
+                var playerController = FindObjectOfType<PlayerHub>();
+                if (playerController != null)
+                    player = playerController.transform;
+            }
         }
 
         private void Update()
         {
-            float verticalInput = GetVerticalInput();
+            TickScroll();
+            TickFollow();
+        }
 
-            // Không có input → không làm gì
-            if (Mathf.Approximately(verticalInput, 0f))
+        private void TickScroll()
+        {
+            if (_material == null)
                 return;
 
-            // Nếu còn trong giới hạn → move + scroll
-            if (CanMove(verticalInput))
+            _offset.x = (_offset.x + scrollSpeed * Time.deltaTime) % 1f;
+            _material.mainTextureOffset = _offset;
+        }
+
+        private void TickFollow()
+        {
+            if (player == null)
+                return;
+
+            var current = transform.position;
+            var target = current;
+
+            var desired = player.position + followOffset;
+
+            if (followX) target.x = desired.x;
+            if (followY) target.y = desired.y;
+            if (followZ) target.z = desired.z;
+
+            if (followSmooth <= 0f)
             {
-                Move(verticalInput);
-                ScrollBackground();
+                transform.position = target;
+                return;
             }
+
+            transform.position = Vector3.Lerp(current, target, 1f - Mathf.Exp(-followSmooth * Time.deltaTime));
         }
 
-        private float GetVerticalInput()
+        private void OnDestroy()
         {
-            float vertical = 0f;
-
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-                vertical += 1f;
-
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-                vertical -= 1f;
-
-            return Mathf.Clamp(vertical, -1f, 1f);
-        }
-
-        private bool CanMove(float verticalInput)
-        {
-            float currentY = transform.position.y;
-
-            // Chặn đi lên khi đã chạm max
-            if (verticalInput > 0 && currentY >= maxY)
-                return false;
-
-            // Chặn đi xuống khi đã chạm min
-            if (verticalInput < 0 && currentY <= minY)
-                return false;
-
-            return true;
-        }
-
-        private void Move(float verticalInput)
-        {
-            transform.Translate(
-                0f,
-                verticalInput * moveSpeed * Time.deltaTime,
-                0f,
-                Space.World
-            );
-        }
-
-        private void ScrollBackground()
-        {
-            _offset.x = Mathf.Repeat(
-                _offset.x + scrollSpeed * Time.deltaTime,
-                1f
-            );
-
-            _material.SetTextureOffset(MainTex, _offset);
-        }
-
-        // (Optional) Vẽ gizmos để dễ debug trong Scene
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-
-            Vector3 pos = transform.position;
-
-            Gizmos.DrawLine(
-                new Vector3(pos.x - 5, minY, 0),
-                new Vector3(pos.x + 5, minY, 0)
-            );
-
-            Gizmos.DrawLine(
-                new Vector3(pos.x - 5, maxY, 0),
-                new Vector3(pos.x + 5, maxY, 0)
-            );
+            // Prevent leaking the instanced material created by .material
+            if (_material != null)
+                Destroy(_material);
         }
     }
 }

@@ -1321,9 +1321,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungTran31.ScrollingBackground
   scrollSpeed: 0.5
-  moveSpeed: 5
-  minY: -3
-  maxY: 3
+  targetRenderer: {fileID: 0}
+  player: {fileID: 5781595981464083495}
+  followX: 0
+  followY: 1
+  followZ: 0
+  followOffset: {x: 0, y: 0, z: 0}
+  followSmooth: 15
 --- !u!1 &101145124600385944
 GameObject:
   m_ObjectHideFlags: 0

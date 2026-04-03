@@ -16,9 +16,16 @@ namespace DungTran31.GamePlay.Player
         // Rotation
         private float _turnSmoothVelocity;
 
+        /// <summary>
+        /// Expose current normalized input magnitude (0..1) for other systems (e.g. background scrolling).
+        /// </summary>
+        public float MoveInputMagnitude01 { get; private set; }
+
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            rb.gravityScale = 0f;
+            rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
         private void Update()
@@ -28,6 +35,8 @@ namespace DungTran31.GamePlay.Player
 
             if (_input.sqrMagnitude > 1f)
                 _input.Normalize();
+
+            MoveInputMagnitude01 = Mathf.Clamp01(_input.magnitude);
         }
 
         private void FixedUpdate()
@@ -37,6 +46,7 @@ namespace DungTran31.GamePlay.Player
 
         private void HandleMovement2D()
         {
+            // Use correct Rigidbody2D API for consistent physics stepping.
             rb.linearVelocity = _input * moveSpeed;
 
             if (_input.sqrMagnitude <= 0.0001f)
