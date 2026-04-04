@@ -1,88 +1,87 @@
 ﻿using UnityEngine;
-using DungTran31.GamePlay.Player;
 
 namespace DungTran31.UI
 {
     public class ScrollingBackground : MonoBehaviour
     {
-        [Header("Scroll")]
         [SerializeField] private float scrollSpeed = 0.5f;
 
-        [Header("Renderer (optional)")]
-        [SerializeField] private Renderer targetRenderer;
+        [Header("Movement")]
+        [SerializeField] private float moveSpeed = 5f;
 
-        [Header("Follow Player")]
-        [SerializeField] private Transform player;
-        [SerializeField] private bool followX = false;
-        [SerializeField] private bool followY = true;
-        [SerializeField] private bool followZ = false;
-        [SerializeField] private Vector3 followOffset = Vector3.zero;
-        [SerializeField, Tooltip("How quickly the background moves to the player's position. Higher = snappier.")]
-        private float followSmooth = 15f;
+        [Header("Options")]
+        [Tooltip("If true, background TEXTURE scrolling will be opposite to player input. (Transform movement is NOT inverted)")]
+        [SerializeField] private bool invertScrollDirection = true;
 
+        [Tooltip("If true, background texture scroll will be tied to vertical input (up/down). If false, it scrolls constantly.")]
+        [SerializeField] private bool scrollOnlyWhenMoving = true;
+
+        private SpriteRenderer _spriteRenderer;
         private Material _material;
         private Vector2 _offset;
 
+        private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+
         private void Awake()
         {
-            if (targetRenderer == null)
-                targetRenderer = GetComponent<Renderer>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
 
-            if (targetRenderer != null)
-                _material = targetRenderer.material; // creates an instance for this renderer
+            // Use an instance of the material so we don't modify the shared material for all objects.
+            _material = _spriteRenderer.material;
 
-            // Auto-find player if not assigned (requires PlayerController in scene)
-            if (player == null)
-            {
-                var playerController = FindObjectOfType<PlayerHub>();
-                if (playerController != null)
-                    player = playerController.transform;
-            }
+            // Initialize with current material offset if any.
+            _offset = _material.GetTextureOffset(MainTex);
         }
 
         private void Update()
         {
-            TickScroll();
-            TickFollow();
-        }
+            float verticalInput = GetVerticalInput();
 
-        private void TickScroll()
-        {
-            if (_material == null)
-                return;
+            // Movement: keep it as-is (W moves up, S moves down).
+            if (!Mathf.Approximately(verticalInput, 0f))
+                Move(verticalInput);
 
-            _offset.x = (_offset.x + scrollSpeed * Time.deltaTime) % 1f;
-            _material.mainTextureOffset = _offset;
-        }
-
-        private void TickFollow()
-        {
-            if (player == null)
-                return;
-
-            var current = transform.position;
-            var target = current;
-
-            var desired = player.position + followOffset;
-
-            if (followX) target.x = desired.x;
-            if (followY) target.y = desired.y;
-            if (followZ) target.z = desired.z;
-
-            if (followSmooth <= 0f)
+            // Scrolling: invert only the TEXTURE scrolling direction as requested.
+            if (scrollOnlyWhenMoving)
             {
-                transform.position = target;
-                return;
+                if (!Mathf.Approximately(verticalInput, 0f))
+                    ScrollBackground(verticalInput);
             }
-
-            transform.position = Vector3.Lerp(current, target, 1f - Mathf.Exp(-followSmooth * Time.deltaTime));
+            else
+            {
+                // Constant scroll (use 1 so it scrolls at scrollSpeed)
+                ScrollBackground(1f);
+            }
         }
 
-        private void OnDestroy()
+        private float GetVerticalInput()
         {
-            // Prevent leaking the instanced material created by .material
-            if (_material != null)
-                Destroy(_material);
+            float vertical = 0f;
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+                vertical += 1f;
+
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+                vertical -= 1f;
+
+            return Mathf.Clamp(vertical, -1f, 1f);
+        }
+
+        private void ScrollBackground(float verticalInput)
+        {
+            // Invert ONLY scroll direction (not object movement).
+            // When moving down (verticalInput = -1), with invertScrollDirection = true,
+            // this becomes +scroll, i.e. scrolls the opposite way.
+            float dir = invertScrollDirection ? 1f : -1f;
+
+            // Using Repeat keeps offset stable in [0..1).
+            _offset.x = Mathf.Repeat(_offset.x + (scrollSpeed * verticalInput * dir * Time.deltaTime), 1f);
+            _material.SetTextureOffset(MainTex, _offset);
+        }
+
+        private void Move(float verticalInput)
+        {
+            transform.Translate(0f, verticalInput * moveSpeed * Time.deltaTime, 0f, Space.World);
         }
     }
 }

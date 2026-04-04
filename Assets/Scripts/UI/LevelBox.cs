@@ -67,7 +67,7 @@ namespace DungTran31.UI
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 if (!LevelManager.IsBossUnlocked(levelId)) return;
-
+                AudioManager.Instance.PlaySfx(AudioManager.Instance.pressed);
                 SceneManager.LoadScene("PreLevel" + levelId);
             }
         }

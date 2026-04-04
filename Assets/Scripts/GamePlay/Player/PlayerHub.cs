@@ -46,7 +46,6 @@ namespace DungTran31.GamePlay.Player
 
         private void HandleMovement2D()
         {
-            // Use correct Rigidbody2D API for consistent physics stepping.
             rb.linearVelocity = _input * moveSpeed;
 
             if (_input.sqrMagnitude <= 0.0001f)
