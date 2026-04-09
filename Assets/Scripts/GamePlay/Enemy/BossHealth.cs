@@ -23,6 +23,7 @@ namespace DungTran31.GamePlay.Enemy
         private float currentHealth;
         private bool isPoisoned = false;
         private bool isFrozen = false;
+        private bool isDead = false;
 
         public float GetCurrentHealth()
         {
@@ -43,6 +44,7 @@ namespace DungTran31.GamePlay.Enemy
 
         private void OnEnable()
         {
+            isDead = false;
             currentHealth = maxHealth;
             bossHealthBar = GetComponentInChildren<BossHealthBar>();
             bossHealthBar.UpdateHealthBar(currentHealth, maxHealth);
@@ -72,6 +74,8 @@ namespace DungTran31.GamePlay.Enemy
 
         private void ApplyDamage(float amount)
         {
+            if (isDead) return;
+
             ShowDamage(amount.ToString());
             currentHealth = Mathf.Clamp(currentHealth - amount, 0, maxHealth);
             bossHealthBar.UpdateHealthBar(currentHealth, maxHealth);
