@@ -710,13 +710,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 147805404}
     m_Modifications:
+    - target: {fileID: 797136143458949753, guid: 3affe944bad8ba1408ebace9b081df58, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1064254304719506496, guid: 3affe944bad8ba1408ebace9b081df58, type: 3}
       propertyPath: m_Name
       value: UnlockText
       objectReference: {fileID: 0}
     - target: {fileID: 1064254304719506496, guid: 3affe944bad8ba1408ebace9b081df58, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4399842276792208019, guid: 3affe944bad8ba1408ebace9b081df58, type: 3}
       propertyPath: m_Pivot.x

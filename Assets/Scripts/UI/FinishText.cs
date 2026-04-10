@@ -1,5 +1,5 @@
 using DG.Tweening;
-using DungTran31.GamePlay.Enemy;
+using DungTran31.Core;
 using TMPro;
 using UnityEngine;
 
@@ -10,10 +10,17 @@ namespace DungTran31.UI
         [SerializeField] private float moveUpDistance = 2f;
         [SerializeField] private float duration = 1f;
 
+        [Header("Text")]
+        [SerializeField] private string bossUnlockedTextFormat = "Boss {0} Unlocked!";
+
         private Tween moveTween;
         private Tween fadeTween;
 
         private TMP_Text tmpText;
+        private RectTransform rectTransform;
+        private Vector2 initialAnchoredPosition;
+        private Vector3 initialLocalPosition;
+        private string initialText;
 
         private void Awake()
         {
@@ -25,44 +32,88 @@ namespace DungTran31.UI
                 return;
             }
 
+            rectTransform = GetComponent<RectTransform>();
+            if (rectTransform != null)
+            {
+                initialAnchoredPosition = rectTransform.anchoredPosition;
+            }
+
+            initialLocalPosition = transform.localPosition;
+            initialText = tmpText.text;
+
             tmpText.enabled = false;
         }
 
         private void OnEnable()
         {
-            BossHealth.OnBossDeath += HandleBossDeath;
+            LevelManager.OnBossUnlocked += HandleBossUnlocked;
         }
 
         private void OnDisable()
         {
-            BossHealth.OnBossDeath -= HandleBossDeath;
+            LevelManager.OnBossUnlocked -= HandleBossUnlocked;
         }
 
-        private void HandleBossDeath(BossHealth.BossDeathEventArgs args)
+        private void HandleBossUnlocked(int bossId)
         {
-            PlayEffect();
+            var message = string.Format(bossUnlockedTextFormat, bossId);
+            PlayEffect(message);
         }
 
-        private void PlayEffect()
+        private void PlayEffect(string message)
         {
-            // Enable only the text rendering
             tmpText.enabled = true;
 
             // reset for re-play
             moveTween?.Kill();
             fadeTween?.Kill();
 
+            // Reset to a stable baseline, then animate in LOCAL/UI space (prevents moving too far/fast in world units)
+            if (rectTransform != null)
+            {
+                rectTransform.anchoredPosition = initialAnchoredPosition;
+            }
+            else
+            {
+                transform.localPosition = initialLocalPosition;
+            }
+
+            tmpText.text = message;
+
             var c = tmpText.color;
             c.a = 1f;
             tmpText.color = c;
 
-            // Move the GameObject up
-            moveTween = transform.DOMoveY(transform.position.y + moveUpDistance, duration)
-                .SetEase(Ease.OutQuad);
+            // Move up (UI: anchoredPosition, World objects: localPosition)
+            if (rectTransform != null)
+            {
+                moveTween = rectTransform
+                    .DOAnchorPosY(initialAnchoredPosition.y + moveUpDistance, duration)
+                    .SetEase(Ease.OutQuad);
+            }
+            else
+            {
+                moveTween = transform
+                    .DOLocalMoveY(initialLocalPosition.y + moveUpDistance, duration)
+                    .SetEase(Ease.OutQuad);
+            }
 
-            // Fade out TextMeshPro alpha, then disable the TMP component
-            fadeTween = tmpText.DOFade(0f, duration)
-                .OnComplete(() => tmpText.enabled = false);
+            // Fade out TextMeshPro alpha, then disable the TMP component and restore original text
+            fadeTween = tmpText
+                .DOFade(0f, duration)
+                .OnComplete(() =>
+                {
+                    tmpText.enabled = false;
+                    tmpText.text = initialText;
+                });
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                PlayEffect("Test Boss Unlocked!");
+            }
         }
     }
 }

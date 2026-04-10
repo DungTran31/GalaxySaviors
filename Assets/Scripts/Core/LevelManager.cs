@@ -6,6 +6,8 @@ namespace DungTran31.Core
 {
     public static class LevelManager
     {
+        public static event Action<int> OnBossUnlocked;
+
         // ===================== CHECK =====================
 
         public static bool IsBossCompleted(int id)
@@ -37,6 +39,8 @@ namespace DungTran31.Core
             {
                 PlayerPrefs.SetInt($"Boss_{id}_Unlocked", 1);
                 Debug.Log($"Boss {id} Unlocked");
+
+                OnBossUnlocked?.Invoke(id);
             }
         }
 
