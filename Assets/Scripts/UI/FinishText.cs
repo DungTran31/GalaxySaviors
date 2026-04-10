@@ -1,5 +1,7 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using DungTran31.Core;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +11,9 @@ namespace DungTran31.UI
     {
         [SerializeField] private float moveUpDistance = 2f;
         [SerializeField] private float duration = 1f;
+
+        [Header("Delay")]
+        [SerializeField] private float delayBetweenMessages = 1f;
 
         [Header("Text")]
         [SerializeField] private string bossUnlockedTextFormat = "Boss {0} Unlocked!";
@@ -21,6 +26,9 @@ namespace DungTran31.UI
         private Vector2 initialAnchoredPosition;
         private Vector3 initialLocalPosition;
         private string initialText;
+
+        private Queue<string> messageQueue = new Queue<string>();
+        private bool isProcessing = false;
 
         private void Awake()
         {
@@ -57,26 +65,50 @@ namespace DungTran31.UI
         private void HandleBossUnlocked(int bossId)
         {
             var message = string.Format(bossUnlockedTextFormat, bossId);
-            PlayEffect(message);
+
+            messageQueue.Enqueue(message);
+
+            if (!isProcessing)
+            {
+                StartCoroutine(ProcessQueue());
+            }
         }
+
+        // ===================== QUEUE =====================
+
+        private IEnumerator ProcessQueue()
+        {
+            isProcessing = true;
+
+            while (messageQueue.Count > 0)
+            {
+                yield return new WaitForSeconds(delayBetweenMessages);
+
+                string message = messageQueue.Dequeue();
+
+                PlayEffect(message);
+
+                // đợi animation chạy xong
+                yield return new WaitForSeconds(duration);
+            }
+
+            isProcessing = false;
+        }
+
+        // ===================== EFFECT =====================
 
         private void PlayEffect(string message)
         {
             tmpText.enabled = true;
 
-            // reset for re-play
             moveTween?.Kill();
             fadeTween?.Kill();
 
-            // Reset to a stable baseline, then animate in LOCAL/UI space (prevents moving too far/fast in world units)
+            // reset vị trí
             if (rectTransform != null)
-            {
                 rectTransform.anchoredPosition = initialAnchoredPosition;
-            }
             else
-            {
                 transform.localPosition = initialLocalPosition;
-            }
 
             tmpText.text = message;
 
@@ -84,7 +116,7 @@ namespace DungTran31.UI
             c.a = 1f;
             tmpText.color = c;
 
-            // Move up (UI: anchoredPosition, World objects: localPosition)
+            // move
             if (rectTransform != null)
             {
                 moveTween = rectTransform
@@ -98,7 +130,7 @@ namespace DungTran31.UI
                     .SetEase(Ease.OutQuad);
             }
 
-            // Fade out TextMeshPro alpha, then disable the TMP component and restore original text
+            // fade
             fadeTween = tmpText
                 .DOFade(0f, duration)
                 .OnComplete(() =>
@@ -108,12 +140,14 @@ namespace DungTran31.UI
                 });
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                PlayEffect("Test Boss Unlocked!");
-            }
-        }
+        // ===================== TEST =====================
+
+        //private void Update()
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Space))
+        //    {
+        //        HandleBossUnlocked(Random.Range(1, 6));
+        //    }
+        //}
     }
 }
