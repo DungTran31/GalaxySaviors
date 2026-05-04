@@ -4,16 +4,21 @@ namespace DungTran31.UI
 {
     public class ScrollingBackground : MonoBehaviour
     {
+        [Header("Scroll Settings")]
         [SerializeField] private float scrollSpeed = 0.5f;
 
         [Header("Movement")]
         [SerializeField] private float moveSpeed = 5f;
 
+        [Header("Player Reference")]
+        [SerializeField] private Rigidbody2D playerRb;
+        [SerializeField] private float movementThreshold = 0.01f;
+
         [Header("Options")]
-        [Tooltip("If true, background TEXTURE scrolling will be opposite to player input. (Transform movement is NOT inverted)")]
+        [Tooltip("If true, background TEXTURE scrolling will be opposite to player input.")]
         [SerializeField] private bool invertScrollDirection = true;
 
-        [Tooltip("If true, background texture scroll will be tied to vertical input (up/down). If false, it scrolls constantly.")]
+        [Tooltip("If true, background texture scroll will be tied to player movement.")]
         [SerializeField] private bool scrollOnlyWhenMoving = true;
 
         private SpriteRenderer _spriteRenderer;
@@ -26,10 +31,9 @@ namespace DungTran31.UI
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
 
-            // Use an instance of the material so we don't modify the shared material for all objects.
+            // Tạo instance material riêng
             _material = _spriteRenderer.material;
 
-            // Initialize with current material offset if any.
             _offset = _material.GetTextureOffset(MainTex);
         }
 
@@ -37,19 +41,23 @@ namespace DungTran31.UI
         {
             float verticalInput = GetVerticalInput();
 
-            // Movement: keep it as-is (W moves up, S moves down).
-            if (!Mathf.Approximately(verticalInput, 0f))
-                Move(verticalInput);
+            // 🔥 Kiểm tra player có thực sự di chuyển không
+            bool isPlayerMoving = Mathf.Abs(playerRb.linearVelocity.y) > movementThreshold;
 
-            // Scrolling: invert only the TEXTURE scrolling direction as requested.
+            // Di chuyển background object (nếu bạn đang dùng kiểu này)
+            if (isPlayerMoving)
+            {
+                Move(verticalInput);
+            }
+
+            // Scroll texture
             if (scrollOnlyWhenMoving)
             {
-                if (!Mathf.Approximately(verticalInput, 0f))
+                if (isPlayerMoving)
                     ScrollBackground(verticalInput);
             }
             else
             {
-                // Constant scroll (use 1 so it scrolls at scrollSpeed)
                 ScrollBackground(1f);
             }
         }
@@ -69,19 +77,24 @@ namespace DungTran31.UI
 
         private void ScrollBackground(float verticalInput)
         {
-            // Invert ONLY scroll direction (not object movement).
-            // When moving down (verticalInput = -1), with invertScrollDirection = true,
-            // this becomes +scroll, i.e. scrolls the opposite way.
             float dir = invertScrollDirection ? 1f : -1f;
 
-            // Using Repeat keeps offset stable in [0..1).
-            _offset.x = Mathf.Repeat(_offset.x + (scrollSpeed * verticalInput * dir * Time.deltaTime), 1f);
+            _offset.x = Mathf.Repeat(
+                _offset.x + (scrollSpeed * verticalInput * dir * Time.deltaTime),
+                1f
+            );
+
             _material.SetTextureOffset(MainTex, _offset);
         }
 
         private void Move(float verticalInput)
         {
-            transform.Translate(0f, verticalInput * moveSpeed * Time.deltaTime, 0f, Space.World);
+            transform.Translate(
+                0f,
+                verticalInput * moveSpeed * Time.deltaTime,
+                0f,
+                Space.World
+            );
         }
     }
 }
